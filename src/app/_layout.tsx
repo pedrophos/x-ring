@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { type Db, DbContext, openDb } from '@/db/client';
+import { colors } from '@/ui/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,12 +30,20 @@ export default function RootLayout() {
 
   return (
     <DbContext.Provider value={db}>
-      <Stack screenOptions={{ headerTitle: 'X-Ring' }} />
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: colors.bg },
+          headerTintColor: colors.ink,
+          headerShadowVisible: false,
+          headerTitleStyle: { fontWeight: '700' },
+          contentStyle: { backgroundColor: colors.bg },
+        }}
+      />
     </DbContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, backgroundColor: colors.bg },
   error: { color: '#B00020' },
 });

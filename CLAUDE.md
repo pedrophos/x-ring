@@ -21,7 +21,18 @@ npx eas-cli@latest build -p android --profile preview   # APK para instalar dire
 - `src/domain/` — lógica pura, sem Expo/React (pontuação, alvos, análise de grupo, ranking). Reaproveitável no back-end futuro. É onde ficam os testes.
 - `src/db/` — schema Drizzle, cliente expo-sqlite, seed idempotente. O banco é aberto de forma assíncrona uma vez (`openDb`, obrigatório na web) e chega às telas por `useDb()`; não criar instância global síncrona.
 - `drizzle/` — migrations geradas; nunca editar à mão.
-- `src/app/` — telas (expo-router).
+- `src/db/repo.ts` — todas as leituras/escritas. Toda escrita chama `invalidate()` (`src/db/store.ts`); telas leem com `useData(load, deps)` e recarregam sozinhas.
+- `src/ui/` — tema (`theme.ts`), componentes base (`kit.tsx`), `Target` (alvo + lupa), `LineChart`, `WeekStrip`.
+- `src/app/` — telas (expo-router): início, `session/new`, `session/[id]` (tiro), `session/[id]/summary`, `history`, `evolution`, `week`, `competition/`, `settings`.
+
+## Convenções
+
+- Coordenadas: desenho/SVG em mm com y para baixo (`centers` do alvo); flecha em mm relativa ao spot com **y para cima**. Conversões só em `src/domain/geometry.ts`.
+- Transações Drizzle no expo-sqlite são **síncronas**: dentro de `db.transaction` use `.run()`/`.all()`, nunca `await`.
+- Formulários que partem de dados carregados: componente filho montado com os dados (estado inicial no `useState`), não `setState` em `useEffect` (o lint do React Compiler acusa).
+- Textos de UI em português; tema claro único (uso no sol).
+- Gráficos: série única na cor `#2a78d6` (validada pela skill dataviz), sem eixo duplo.
+- Web não é alvo: o SQLite síncrono do Drizzle exige headers COOP/COEP na página, que o dev server do Expo não envia em output `single`.
 
 ## Regras do modelo (decididas — não mudar sem conversar)
 
