@@ -2,12 +2,12 @@ import { File, Paths } from 'expo-file-system';
 import { Stack } from 'expo-router';
 import * as Sharing from 'expo-sharing';
 import { useState } from 'react';
-import { Alert } from 'react-native';
 
 import { useDb } from '@/db/client';
 import { type Archer, exportAll, getMe, updateMe } from '@/db/repo';
 import { useData } from '@/db/store';
 import { dateKey } from '@/domain/weeks';
+import { useDialog } from '@/ui/dialog';
 import { Button, Card, ChipRow, Field, Screen, Section, T } from '@/ui/kit';
 import { type ThemePreference, useTheme } from '@/ui/theme';
 
@@ -21,6 +21,7 @@ export default function Settings() {
 function SettingsForm({ me }: { me: Archer }) {
   const { colors, preference, setPreference } = useTheme();
   const db = useDb();
+  const dialog = useDialog();
   const [name, setName] = useState(me.name);
   const [diameter, setDiameter] = useState(String(me.arrowDiameterMm).replace('.', ','));
   const [exporting, setExporting] = useState(false);
@@ -28,7 +29,11 @@ function SettingsForm({ me }: { me: Archer }) {
   async function saveDiameter() {
     const v = Number(diameter.replace(',', '.'));
     if (!(v >= 2 && v <= 12)) {
-      Alert.alert('Diâmetro inválido', 'Use um valor entre 2 e 12 mm.');
+      await dialog.notice({
+        title: 'Esse diâmetro não parece de haste',
+        message: 'Hastes de recurvo ficam entre 2 e 12 mm. A medida vem na embalagem ou no site do fabricante (ex.: 5,5 mm).',
+        confirm: 'Corrigir',
+      });
       return;
     }
     await updateMe(db, { arrowDiameterMm: v });
@@ -45,10 +50,14 @@ function SettingsForm({ me }: { me: Archer }) {
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: 'Backup do X-Ring' });
       } else {
-        Alert.alert('Backup criado', file.uri);
+        await dialog.notice({ title: 'Backup salvo', message: `O arquivo ficou em ${file.uri}`, confirm: 'Entendi' });
       }
     } catch (e) {
-      Alert.alert('Não foi possível exportar', (e as Error).message);
+      await dialog.notice({
+        title: 'O backup não saiu',
+        message: `${(e as Error).message}. Seus dados continuam no aparelho; tente de novo.`,
+        confirm: 'Entendi',
+      });
     } finally {
       setExporting(false);
     }

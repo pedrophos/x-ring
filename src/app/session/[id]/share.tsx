@@ -1,12 +1,13 @@
 import * as Sharing from 'expo-sharing';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { type ComponentRef, useRef, useState } from 'react';
-import { Alert, PixelRatio, View } from 'react-native';
+import { PixelRatio, View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 
 import { useDb } from '@/db/client';
 import { loadSession, standings } from '@/db/repo';
 import { useData } from '@/db/store';
+import { useDialog } from '@/ui/dialog';
 import { Button, Chip, Row, Screen, T } from '@/ui/kit';
 import { PodiumCard, SHARE_HEIGHT, SHARE_WIDTH, ShareCard } from '@/ui/ShareCard';
 import { useTheme } from '@/ui/theme';
@@ -23,6 +24,7 @@ export default function Share() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useDb();
+  const dialog = useDialog();
   const { data: s } = useData(() => loadSession(db, id), [db, id]);
   const [choice, setChoice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -42,7 +44,11 @@ export default function Share() {
     setBusy(true);
     try {
       if (!(await Sharing.isAvailableAsync())) {
-        Alert.alert('Compartilhar indisponível', 'Este aparelho não oferece a tela de compartilhar.');
+        await dialog.notice({
+          title: 'Sem tela de compartilhar',
+          message: 'Este aparelho não oferece o compartilhamento do Android, então a imagem não tem para onde ir.',
+          confirm: 'Entendi',
+        });
         return;
       }
       // A view mede em pontos lógicos; dividir pela densidade dá 1080 × 1920 px reais.
@@ -56,7 +62,11 @@ export default function Share() {
       });
       await Sharing.shareAsync(uri, { mimeType: 'image/png', dialogTitle: 'Compartilhar no story' });
     } catch (e) {
-      Alert.alert('Não deu para gerar a imagem', e instanceof Error ? e.message : String(e));
+      await dialog.notice({
+        title: 'A imagem não saiu',
+        message: `${e instanceof Error ? e.message : String(e)}. Tente de novo em instantes.`,
+        confirm: 'Entendi',
+      });
     } finally {
       setBusy(false);
     }

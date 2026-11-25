@@ -1,6 +1,6 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useDb } from '@/db/client';
@@ -14,11 +14,13 @@ import {
   type NewArrow,
   saveEnd,
   scoreEnd,
+  standings,
 } from '@/db/repo';
 import { useData } from '@/db/store';
 import { ringWidth } from '@/domain/geometry';
 import { hits } from '@/domain/stats';
 import { ArrowSlots } from '@/ui/ArrowSlots';
+import { useDialog } from '@/ui/dialog';
 import { GroupReadingCard } from '@/ui/GroupReadingCard';
 import { Button, Card, Chip, fmt, Row, T } from '@/ui/kit';
 import { TallyStave } from '@/ui/TallyStave';
@@ -34,6 +36,7 @@ export default function Shoot() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useDb();
+  const dialog = useDialog();
   const { data: s } = useData(() => loadSession(db, id), [db, id]);
 
   const [manualId, setManualId] = useState<string | null>(null);
@@ -92,30 +95,67 @@ export default function Shoot() {
     }
   }
 
-  function removeLastEnd() {
-    if (!active!.ends.length) return;
-    Alert.alert('Apagar última série?', `Série ${active!.ends.length} de ${active!.archer.name}.`, [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Apagar', style: 'destructive', onPress: () => deleteLastEnd(db, active!.id) },
-    ]);
+  async function removeLastEnd() {
+    const last = active!.ends.at(-1);
+    if (!last) return;
+    const who = active!.archer.nickname || active!.archer.name;
+    const ok = await dialog.confirm({
+      title: `Apagar a série ${last.endNumber}?`,
+      extra: (
+        <Row>
+          <View style={{ flex: 1 }}>
+            <ArrowSlots scores={last.scored} sort size={36} />
+          </View>
+          <T variant="title" style={type.number}>
+            {last.scored.reduce((t, a) => t + a.value, 0)}
+          </T>
+        </Row>
+      ),
+      message: isComp ? `As flechas de ${who} saem do alvo e do placar.` : 'As flechas saem do alvo e do total do dia.',
+      cancel: 'Manter',
+      confirm: 'Apagar série',
+      tone: 'danger',
+    });
+    if (ok) await deleteLastEnd(db, active!.id);
   }
 
-  function finish() {
-    const pending = Object.values(drafts).some((d) => d.length > 0);
-    Alert.alert(
-      isComp ? 'Encerrar competição?' : 'Encerrar treino?',
-      pending ? 'Há flechas não salvas, que serão descartadas.' : isComp ? 'O placar final será congelado.' : undefined,
-      [
-        { text: 'Continuar atirando', style: 'cancel' },
-        {
-          text: 'Encerrar',
-          onPress: async () => {
-            await finishSession(db, s!.id);
-            router.replace(`/session/${s!.id}/summary`);
-          },
-        },
-      ],
-    );
+  async function finish() {
+    const unsaved = Object.values(drafts).reduce((n, d) => n + d.length, 0);
+    const unsavedNote =
+      unsaved === 1 ? 'A flecha desta série ainda não foi salva e fica de fora.' : unsaved > 1 ? `As ${unsaved} flechas desta série ainda não foram salvas e ficam de fora.` : '';
+
+    let ok: boolean;
+    if (isComp) {
+      const leader = standings(s!)[0];
+      const frozen = leader && leader.final > 0 ? `O placar fica congelado com ${leader.p.archer.nickname || leader.p.archer.name} na frente.` : 'O placar fica congelado.';
+      ok = await dialog.confirm({
+        title: 'Encerrar a competição?',
+        message: [unsavedNote, frozen].filter(Boolean).join(' '),
+        cancel: 'Continuar',
+        confirm: 'Ver o pódio',
+      });
+    } else {
+      const me = s!.participants[0];
+      const ends = me.ends.length;
+      ok = await dialog.confirm({
+        title: 'Encerrar o treino?',
+        extra:
+          ends > 0 ? (
+            <View style={{ gap: space.sm }}>
+              <T variant="heading" style={type.number}>
+                {ends} {ends === 1 ? 'série' : 'séries'} · {me.summary.total} pontos
+              </T>
+              <TallyStave height={22} marks={me.ends.map(() => 'cut' as const)} />
+            </View>
+          ) : undefined,
+        message: unsavedNote || (ends > 0 ? 'O resumo do dia vem a seguir.' : 'Nenhuma série foi salva ainda.'),
+        cancel: 'Atirar mais',
+        confirm: 'Encerrar',
+      });
+    }
+    if (!ok) return;
+    await finishSession(db, s!.id);
+    router.replace(`/session/${s!.id}/summary`);
   }
 
   const dayPoints = active.ends.flatMap((e) => hits(e.scored));

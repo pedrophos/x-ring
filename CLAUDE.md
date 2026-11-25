@@ -14,6 +14,7 @@ npm run typecheck
 npx expo lint
 npm run db:generate     # gera migration após mudar src/db/schema.ts
 npx eas-cli@latest build -p android --profile preview   # APK para instalar direto
+npm run update -- --message "o que mudou"            # atualização pelo ar (EAS Update) para o APK instalado
 ```
 
 ## Estrutura
@@ -30,11 +31,16 @@ npx eas-cli@latest build -p android --profile preview   # APK para instalar dire
 - Coordenadas: desenho/SVG em mm com y para baixo (`centers` do alvo); flecha em mm relativa ao spot com **y para cima**. Conversões só em `src/domain/geometry.ts`.
 - Transações Drizzle no expo-sqlite são **síncronas**: dentro de `db.transaction` use `.run()`/`.all()`, nunca `await`.
 - Formulários que partem de dados carregados: componente filho montado com os dados (estado inicial no `useState`), não `setState` em `useEffect` (o lint do React Compiler acusa).
-- Textos de UI em português.
+- Textos de UI em português, no vocabulário do tiro com arco e com os dados da sessão (nada de "Tem certeza?" genérico).
+- Confirmações e avisos: `useDialog()` (`src/ui/dialog.tsx`), a folha na identidade do app; nunca `Alert.alert`.
 - Tema: claro/escuro/sistema (Ajustes, salvo no kv-store do expo-sqlite). Cores **só** via `useTheme().colors` com tokens por papel (`src/ui/theme.tsx`); nada de hex nas telas. Exceção: o alvo e as zonas de pontuação usam as cores fixas da World Archery nos dois modos. Identidade visual futura = trocar os valores de `lightColors`/`darkColors`.
 - Identidade "Os alvos da vila" (direção em `.impeccable/surfaces/src-app.md`, produto em `PRODUCT.md`): barra de topo = gramado (`shell`), ação principal = palha (`primary`), bastão de carvalho com entalhes (`TallyStave`) como assinatura. IM Fell (`fonts.fell`/`fellSC`, variantes `display` e `label`) só em títulos e rótulos; **números sempre na fonte do sistema**. Cor chapada, sem textura, sem gradiente, sem rótulo acima de título.
 - Gráficos: série única na cor `colors.series` (claro `#2a78d6`, escuro `#3987e5`, paleta validada pela skill dataviz), sem eixo duplo.
 - Web não é alvo: o SQLite síncrono do Drizzle exige headers COOP/COEP na página, que o dev server do Expo não envia em output `single`.
+
+## Atualizações pelo ar
+
+O APK do perfil `preview` escuta o canal `preview` do EAS Update e baixa a versão nova ao abrir (aplica na abertura seguinte). `runtimeVersion` usa a política `fingerprint`: mudança só de JS/TS/textos vai por `npm run update`; biblioteca nativa nova, ícone, splash ou mudança no `app.json` mudam o fingerprint e pedem APK novo (a atualização não chega a um APK incompatível).
 
 ## Regras do modelo (decididas — não mudar sem conversar)
 

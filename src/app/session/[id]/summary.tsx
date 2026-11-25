@@ -1,6 +1,6 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useDb } from '@/db/client';
 import {
@@ -16,6 +16,7 @@ import { useData } from '@/db/store';
 import { ringWidth } from '@/domain/geometry';
 import { hits } from '@/domain/stats';
 import { ArrowSlots } from '@/ui/ArrowSlots';
+import { useDialog } from '@/ui/dialog';
 import { GroupReadingCard } from '@/ui/GroupReadingCard';
 import { Button, Card, Chip, Field, fmt, fmtDate, Row, Screen, Section, Stat, T, ToggleRow } from '@/ui/kit';
 import { type MarkedArrow, Target } from '@/ui/Target';
@@ -25,6 +26,7 @@ export default function Summary() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useDb();
+  const dialog = useDialog();
   const { data: s } = useData(() => loadSession(db, id), [db, id]);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -32,18 +34,20 @@ export default function Summary() {
   const isComp = s.mode === 'competition';
   const p = s.participants.find((x) => x.id === selected) ?? s.participants[0];
 
-  function remove() {
-    Alert.alert('Excluir sessão?', 'Ela some do histórico e das estatísticas.', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Excluir',
-        style: 'destructive',
-        onPress: async () => {
-          await deleteSession(db, s!.id);
-          router.back();
-        },
-      },
-    ]);
+  async function remove() {
+    const facts = isComp
+      ? `${fmtDate(s!.startedAt)} · ${s!.participants.length} atiradores. Some do histórico e dos recordes`
+      : `${fmtDate(s!.startedAt)} · ${p.distanceM} m · ${p.summary.total} pontos. Some do histórico e da evolução`;
+    const ok = await dialog.confirm({
+      title: isComp ? 'Excluir esta competição?' : 'Excluir este treino?',
+      message: `${facts}, e não dá para desfazer.`,
+      cancel: 'Manter',
+      confirm: 'Excluir',
+      tone: 'danger',
+    });
+    if (!ok) return;
+    await deleteSession(db, s!.id);
+    router.back();
   }
 
   return (

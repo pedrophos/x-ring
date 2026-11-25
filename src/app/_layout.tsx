@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { type Db, DbContext, openDb } from '@/db/client';
+import { DialogProvider } from '@/ui/dialog';
 import { fonts, ThemeProvider, useTheme } from '@/ui/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -60,17 +61,19 @@ function App() {
   return (
     <DbContext.Provider value={db}>
       <NavThemeProvider value={navTheme}>
-        {/* A barra de topo é sempre o gramado (escuro): ícones claros nos dois modos. */}
-        <StatusBar style="light" />
-        <Stack
-          screenOptions={{
-            headerStyle: { backgroundColor: colors.shell },
-            headerTintColor: colors.onShell,
-            headerShadowVisible: false,
-            headerTitleStyle: { fontFamily: fonts.fellSC, fontSize: 22, fontWeight: '400' },
-            contentStyle: { backgroundColor: colors.bg },
-          }}
-        />
+        <DialogProvider>
+          {/* A barra de topo é sempre o gramado (escuro): ícones claros nos dois modos. */}
+          <StatusBar style="light" />
+          <Stack
+            screenOptions={{
+              headerStyle: { backgroundColor: colors.shell },
+              headerTintColor: colors.onShell,
+              headerShadowVisible: false,
+              headerTitleStyle: { fontFamily: fonts.fellSC, fontSize: 22, fontWeight: '400' },
+              contentStyle: { backgroundColor: colors.bg },
+            }}
+          />
+        </DialogProvider>
       </NavThemeProvider>
     </DbContext.Provider>
   );
