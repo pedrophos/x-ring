@@ -13,7 +13,7 @@ export type Ring = {
 };
 
 export type SpotCenter = {
-  /** Posição do centro do spot no desenho do alvo, em mm. */
+  /** Posição do centro do spot no desenho do alvo, em mm (y para baixo, como no SVG). */
   x: number;
   y: number;
 };
