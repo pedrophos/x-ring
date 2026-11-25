@@ -1,6 +1,7 @@
 import { index, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 import type { Ring, SpotCenter } from '@/domain/target-face';
+import { TECHNIQUE_ELEMENTS } from '@/domain/technique';
 import { newId } from '@/domain/id';
 
 /**
@@ -72,6 +73,8 @@ export const participants = sqliteTable(
     archerId: text('archer_id')
       .notNull()
       .references(() => archers.id),
+    /** Ordem de vez na competição (0, 1, 2…). */
+    position: integer('position').notNull().default(0),
     distanceM: real('distance_m').notNull(),
     targetFaceId: text('target_face_id')
       .notNull()
@@ -138,16 +141,6 @@ export const weeklyPlan = sqliteTable(
   (t) => [index('weekly_plan_week_idx').on(t.archerId, t.weekStart)],
 );
 
-export const techniqueElements = [
-  'stance',
-  'grip',
-  'hook',
-  'draw',
-  'anchor',
-  'release',
-  'follow_through',
-] as const;
-
 export const techniqueFocus = sqliteTable(
   'technique_focus',
   {
@@ -156,7 +149,7 @@ export const techniqueFocus = sqliteTable(
       .notNull()
       .references(() => archers.id),
     weekStart: text('week_start').notNull(),
-    element: text('element', { enum: techniqueElements }).notNull(),
+    element: text('element', { enum: TECHNIQUE_ELEMENTS }).notNull(),
     videoUri: text('video_uri'),
     notes: text('notes'),
   },
