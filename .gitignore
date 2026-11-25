@@ -45,3 +45,6 @@ example
 # CNG: pastas nativas são geradas
 /android
 /ios
+
+# impeccable: estado local da página de decisão
+.impeccable/questions/

@@ -39,9 +39,6 @@ export function GroupReadingCard({ title, points, ringWidthMm }: { title: string
   const tight = !r.causes.length;
   return (
     <Card>
-      <T variant="label" color={colors.inkSoft}>
-        {title}
-      </T>
       {r.offCenter && sight ? (
         <View style={{ gap: 2 }}>
           <T variant="heading">Grupo {tight ? 'fechado ' : ''}fora do centro</T>
@@ -65,7 +62,7 @@ export function GroupReadingCard({ title, points, ringWidthMm }: { title: string
         </View>
       )}
       <T variant="small" color={colors.inkSoft}>
-        Dispersão média {fmt(r.meanRadiusMm, 0)} mm · vertical {fmt(r.sdYMm, 0)} · horizontal {fmt(r.sdXMm, 0)}
+        {title} · dispersão média {fmt(r.meanRadiusMm, 0)} mm · vertical {fmt(r.sdYMm, 0)} · horizontal {fmt(r.sdXMm, 0)}
       </T>
     </Card>
   );

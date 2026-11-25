@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:#FBFDF8;font-family:Roboto,sans-serif;color:#191C1A}
+.bar{padding:48px 16px 12px;display:flex;justify-content:space-between;align-items:center}
+.bar h1{font-size:22px;font-weight:500}
+.icon{width:24px;height:24px;border-radius:50%;border:2px solid #404943}
+.wrap{padding:8px 16px;display:flex;flex-direction:column;gap:16px}
+.filled{background:#2E6A4F;color:#fff;border-radius:20px;height:56px;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:16px}
+.tonal{background:#D0E8D9;color:#0B2117;border-radius:20px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:500}
+.card{background:#EEF2EC;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.t{font-size:14px;font-weight:500;color:#404943}
+.weeks{display:flex;gap:4px}.weeks i{flex:1;height:24px;border-radius:6px;background:#DDE5DE}
+.weeks i.on{background:#2E6A4F}.weeks i.now{outline:2px solid #C79A1E}
+.focus h3{font-size:24px;font-weight:400}
+.focus p{font-size:14px;color:#404943}
+.item{display:flex;gap:12px;align-items:center;font-size:16px}
+.box{width:18px;height:18px;border:2px solid #404943;border-radius:2px}.box.ok{background:#2E6A4F;border-color:#2E6A4F}
+.row{display:flex;gap:8px}.row>div{flex:1}
+.out{border:1px solid #707973;border-radius:20px;height:44px;display:flex;align-items:center;justify-content:center;font-weight:500;color:#2E6A4F}
+</style></head><body>
+<div class="bar"><h1>X-Ring</h1><i class="icon"></i></div>
+<div class="wrap">
+  <div class="filled">Novo treino</div>
+  <div class="tonal">Competição com amigos</div>
+  <div class="card"><div class="t">Semanas com treino · 4 seguidas</div>
+    <div class="weeks"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div>
+  </div>
+  <div class="card focus"><div class="t">Foco técnico</div><h3>Ancoragem</h3>
+    <p>De frente para o rosto, do lado da corda, na altura dos olhos.</p>
+    <div class="item"><i class="box ok"></i>Sessão técnica</div>
+    <div class="item"><i class="box"></i>Sessão de pontuação</div>
+    <div class="item"><i class="box ok"></i>Treino físico (3 dias)</div>
+  </div>
+  <div class="row"><div class="out">Histórico</div><div class="out">Evolução</div></div>
+</div>
+</body></html>

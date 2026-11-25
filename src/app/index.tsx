@@ -6,7 +6,7 @@ import { loadOverview } from '@/db/overview';
 import { useData } from '@/db/store';
 import { nextElement, TECHNIQUE_GUIDE } from '@/domain/technique';
 import { currentStreak } from '@/domain/weeks';
-import { Button, Card, Row, Screen, Section, T } from '@/ui/kit';
+import { Button, Card, Row, Screen, Section, Struck, T } from '@/ui/kit';
 import { radius, space, useTheme } from '@/ui/theme';
 import { WeekStrip } from '@/ui/WeekStrip';
 
@@ -30,9 +30,12 @@ export default function Home() {
     <Screen>
       <Stack.Screen
         options={{
-          title: 'X-Ring',
-          headerTitleStyle: { fontWeight: '800', fontSize: 24 },
-          headerRight: () => <Button kind="ghost" label="Ajustes" onPress={() => router.push('/settings')} />,
+          headerTitle: () => (
+            <T variant="label" color={colors.onShell} style={{ fontSize: 30, lineHeight: 34 }}>
+              X<T variant="label" color={colors.shellAccent} style={{ fontSize: 30, lineHeight: 34 }}>·</T>Ring
+            </T>
+          ),
+          headerRight: () => <Button kind="bar" label="Ajustes" onPress={() => router.push('/settings')} />,
         }}
       />
 
@@ -67,13 +70,10 @@ export default function Home() {
       <Section title="Esta semana">
         <Pressable onPress={() => router.push('/week')} style={({ pressed }) => pressed && { opacity: 0.8 }}>
           <Card>
-            <View style={{ gap: 2 }}>
-              <T variant="label" color={colors.inkSoft}>
-                Foco técnico
-              </T>
-              <T variant="title">{TECHNIQUE_GUIDE[element].label}</T>
+            <View style={{ gap: 4 }}>
+              <T variant="display">{TECHNIQUE_GUIDE[element].label}</T>
               <T variant="small" color={colors.inkSoft}>
-                {TECHNIQUE_GUIDE[element].camera}
+                Foco técnico da semana. {TECHNIQUE_GUIDE[element].camera}
               </T>
             </View>
             <View style={{ height: 1, backgroundColor: colors.line }} />
@@ -85,11 +85,11 @@ export default function Home() {
                     height: 22,
                     borderRadius: radius.sm,
                     borderWidth: 1.5,
-                    borderColor: i.done ? colors.accent : colors.line,
-                    backgroundColor: i.done ? colors.accent : 'transparent',
+                    borderColor: i.done ? colors.select : colors.line,
+                    backgroundColor: i.done ? colors.select : 'transparent',
                   }}
                 />
-                <T color={i.done ? colors.inkSoft : colors.ink}>{i.label}</T>
+                <Struck done={i.done}>{i.label}</Struck>
               </Row>
             ))}
             <T variant="small" color={colors.accent} style={{ fontWeight: '700' }}>

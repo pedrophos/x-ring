@@ -1,3 +1,6 @@
+import { IMFellEnglish_400Regular } from '@expo-google-fonts/im-fell-english/400Regular';
+import { IMFellEnglishSC_400Regular } from '@expo-google-fonts/im-fell-english-sc/400Regular';
+import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -6,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { type Db, DbContext, openDb } from '@/db/client';
-import { ThemeProvider, useTheme } from '@/ui/theme';
+import { fonts, ThemeProvider, useTheme } from '@/ui/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,13 +25,17 @@ function App() {
   const { colors, scheme } = useTheme();
   const [db, setDb] = useState<Db | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  // Fontes embutidas no app: funcionam offline na linha de tiro.
+  const [fontsLoaded, fontError] = useFonts({ IMFellEnglish_400Regular, IMFellEnglishSC_400Regular });
+  const fontsReady = fontsLoaded || !!fontError;
 
   useEffect(() => {
-    openDb()
-      .then(setDb)
-      .catch(setError)
-      .finally(() => SplashScreen.hideAsync());
+    openDb().then(setDb).catch(setError);
   }, []);
+
+  useEffect(() => {
+    if ((db || error) && fontsReady) SplashScreen.hideAsync();
+  }, [db, error, fontsReady]);
 
   // Fundo da janela nativa (aparece em transições e ao abrir o teclado).
   useEffect(() => {
@@ -48,18 +55,19 @@ function App() {
       </View>
     );
   }
-  if (!db) return null;
+  if (!db || !fontsReady) return null;
 
   return (
     <DbContext.Provider value={db}>
       <NavThemeProvider value={navTheme}>
-        <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+        {/* A barra de topo é sempre o gramado (escuro): ícones claros nos dois modos. */}
+        <StatusBar style="light" />
         <Stack
           screenOptions={{
-            headerStyle: { backgroundColor: colors.bg },
-            headerTintColor: colors.ink,
+            headerStyle: { backgroundColor: colors.shell },
+            headerTintColor: colors.onShell,
             headerShadowVisible: false,
-            headerTitleStyle: { fontWeight: '700' },
+            headerTitleStyle: { fontFamily: fonts.fellSC, fontSize: 22, fontWeight: '400' },
             contentStyle: { backgroundColor: colors.bg },
           }}
         />

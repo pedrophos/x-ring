@@ -21,6 +21,7 @@ import { hits } from '@/domain/stats';
 import { ArrowSlots } from '@/ui/ArrowSlots';
 import { GroupReadingCard } from '@/ui/GroupReadingCard';
 import { Button, Card, Chip, fmt, Row, T } from '@/ui/kit';
+import { TallyStave } from '@/ui/TallyStave';
 import { type MarkedArrow, Target } from '@/ui/Target';
 import { space, type, useTheme } from '@/ui/theme';
 
@@ -124,7 +125,9 @@ export default function Shoot() {
       <Stack.Screen
         options={{
           title: isComp ? 'Competição' : `${active.distanceM} m · ${active.face.name}`,
-          headerRight: () => <Button kind="ghost" label="Encerrar" onPress={finish} />,
+          // Título com números: fonte do sistema (a letra antiga nunca toca números).
+          headerTitleStyle: isComp ? undefined : { fontFamily: undefined, fontWeight: '700', fontSize: 18 },
+          headerRight: () => <Button kind="bar" label="Encerrar" onPress={finish} />,
         }}
       />
       <ScrollView scrollEnabled={!touching} contentContainerStyle={styles.content}>
@@ -158,6 +161,16 @@ export default function Shoot() {
             </T>
           </Pressable>
         </Row>
+
+        {s.endsPlanned ? (
+          <TallyStave
+            height={24}
+            marks={Array.from({ length: s.endsPlanned }, (_, i) =>
+              i < active.ends.length ? 'cut' : i === active.ends.length ? 'current' : 'blank',
+            )}
+            accessibilityLabel={`${active.ends.length} de ${s.endsPlanned} séries atiradas`}
+          />
+        ) : null}
 
         <Target
           face={active.face}

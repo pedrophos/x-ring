@@ -72,7 +72,8 @@ export function Section({ title, children, right }: { title: string; children: R
   );
 }
 
-type ButtonKind = 'primary' | 'secondary' | 'ghost' | 'danger';
+/** `bar`: ação de texto sobre a barra de topo (o gramado). */
+type ButtonKind = 'primary' | 'secondary' | 'ghost' | 'danger' | 'bar';
 
 export function Button({
   label,
@@ -91,10 +92,11 @@ export function Button({
 }) {
   const { colors } = useTheme();
   const palette: Record<ButtonKind, { bg: string; fg: string; border: string }> = {
-    primary: { bg: colors.accent, fg: colors.accentInk, border: colors.accent },
+    primary: { bg: colors.primary, fg: colors.onPrimary, border: colors.primary },
     secondary: { bg: colors.surface, fg: colors.ink, border: colors.line },
     ghost: { bg: 'transparent', fg: colors.accent, border: 'transparent' },
     danger: { bg: colors.surface, fg: colors.danger, border: colors.line },
+    bar: { bg: 'transparent', fg: colors.shellAccent, border: 'transparent' },
   };
   const p = palette[kind];
   return (
@@ -134,12 +136,12 @@ export function Chip({
       style={({ pressed }) => [
         styles.chip,
         { borderColor: colors.line, backgroundColor: colors.surface },
-        selected && { backgroundColor: colors.ink, borderColor: colors.ink },
+        selected && { backgroundColor: colors.select, borderColor: colors.select },
         pressed && { opacity: 0.75 },
         style,
       ]}
     >
-      <Text style={[type.body, { fontWeight: '600', color: selected ? colors.surface : colors.ink }]}>{label}</Text>
+      <Text style={[type.body, { fontWeight: '600', color: selected ? colors.onSelect : colors.ink }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -210,7 +212,7 @@ export function Stat({ label, value, hint }: { label: string; value: string; hin
   const { colors } = useTheme();
   return (
     <View style={{ flex: 1, minWidth: 90, gap: 2 }}>
-      <T variant="label" color={colors.inkSoft}>
+      <T variant="small" color={colors.inkSoft} style={{ fontWeight: '600' }}>
         {label}
       </T>
       <T variant="title" style={type.number}>
@@ -227,6 +229,34 @@ export function Stat({ label, value, hint }: { label: string; value: string; hin
 
 export function Row({ children, style, gap = space.sm }: { children: ReactNode; style?: StyleProp<ViewStyle>; gap?: number }) {
   return <View style={[styles.row, { gap }, style]}>{children}</View>;
+}
+
+/**
+ * Item feito: riscado por um traço de palha levemente torto, como marca à mão.
+ * Estado "feito" do vocabulário curto (atual, feito, pendente, erro).
+ */
+export function Struck({ children, done }: { children: string; done: boolean }) {
+  const { colors } = useTheme();
+  return (
+    <View>
+      <T color={done ? colors.inkSoft : colors.ink}>{children}</T>
+      {done && (
+        <View
+          pointerEvents="none"
+          style={{
+            position: 'absolute',
+            left: -2,
+            right: -4,
+            top: '50%',
+            height: 3,
+            borderRadius: 2,
+            backgroundColor: colors.strike,
+            transform: [{ rotate: '-1.5deg' }],
+          }}
+        />
+      )}
+    </View>
+  );
 }
 
 /** Linha divisória entre itens de uma lista dentro de um Card. */

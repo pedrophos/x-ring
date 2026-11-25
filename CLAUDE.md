@@ -32,6 +32,7 @@ npx eas-cli@latest build -p android --profile preview   # APK para instalar dire
 - Formulários que partem de dados carregados: componente filho montado com os dados (estado inicial no `useState`), não `setState` em `useEffect` (o lint do React Compiler acusa).
 - Textos de UI em português.
 - Tema: claro/escuro/sistema (Ajustes, salvo no kv-store do expo-sqlite). Cores **só** via `useTheme().colors` com tokens por papel (`src/ui/theme.tsx`); nada de hex nas telas. Exceção: o alvo e as zonas de pontuação usam as cores fixas da World Archery nos dois modos. Identidade visual futura = trocar os valores de `lightColors`/`darkColors`.
+- Identidade "Os alvos da vila" (direção em `.impeccable/surfaces/src-app.md`, produto em `PRODUCT.md`): barra de topo = gramado (`shell`), ação principal = palha (`primary`), bastão de carvalho com entalhes (`TallyStave`) como assinatura. IM Fell (`fonts.fell`/`fellSC`, variantes `display` e `label`) só em títulos e rótulos; **números sempre na fonte do sistema**. Cor chapada, sem textura, sem gradiente, sem rótulo acima de título.
 - Gráficos: série única na cor `colors.series` (claro `#2a78d6`, escuro `#3987e5`, paleta validada pela skill dataviz), sem eixo duplo.
 - Web não é alvo: o SQLite síncrono do Drizzle exige headers COOP/COEP na página, que o dev server do Expo não envia em output `single`.
 

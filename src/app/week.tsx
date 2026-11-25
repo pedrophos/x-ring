@@ -77,7 +77,7 @@ export default function Week() {
           onChange={(e) => setFocus(db, me.id, week, { element: e })}
         />
         <Card>
-          <T variant="title">{guide.label}</T>
+          <T variant="display">{guide.label}</T>
           <View style={{ gap: 2 }}>
             <T variant="label" color={colors.inkSoft}>
               Onde pôr o celular

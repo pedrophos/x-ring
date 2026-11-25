@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:#EEF0E8;font-family:Roboto,sans-serif;color:#1A1D1A}
+.bar{background:#1F3D2B;color:#F3EEDD;padding:44px 20px 18px;display:flex;align-items:flex-end;justify-content:space-between}
+.brand{font-family:'IM Fell English SC',serif;font-size:34px;letter-spacing:1px;line-height:1}
+.brand b{color:#D9A62E;font-weight:400}
+.gear{font-size:14px;color:#D9A62E;font-weight:500}
+.wrap{padding:18px 18px 0;display:flex;flex-direction:column;gap:18px}
+.cta{background:#D9A62E;color:#1F2A1E;border-radius:12px;height:64px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px}
+.ghost{border:1.5px solid #C9CEBE;background:#FFFFFF;border-radius:12px;height:56px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
+.lab{font-family:'IM Fell English SC',serif;font-size:17px;color:#4A5246;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:baseline}
+.lab span{font-family:Roboto;font-size:13px;color:#4A5246}
+.card{background:#FFFFFF;border:1px solid #D5D9CC;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+/* bastão de contagem */
+.stave{position:relative;height:46px;border-radius:23px;background:#6B4A2B;display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.notch{width:9px;height:30px;background:#2E1F12;clip-path:polygon(0 0,100% 0,60% 100%,40% 100%)}
+.notch.off{height:8px;background:#8A6A47;clip-path:none;border-radius:2px;width:6px}
+.notch.now{height:30px;background:transparent;border:1.5px dashed #D9A62E;clip-path:none;width:9px;border-radius:3px}
+.axis{display:flex;justify-content:space-between;font-size:12px;color:#5C6458}
+.focus h3{font-family:'IM Fell English',serif;font-size:28px;font-weight:400}
+.focus p{font-size:13px;color:#4A5246;line-height:1.4}
+.item{display:flex;align-items:center;gap:10px;font-size:16px}
+.box{width:22px;height:22px;border:1.5px solid #B8BEAD;border-radius:6px}
+.done{color:#5C6458;position:relative}
+.done:after{content:"";position:absolute;left:-2px;right:-4px;top:52%;height:3px;background:#D9A62E;border-radius:2px;transform:rotate(-1.5deg)}
+.box.ok{background:#1F3D2B;border-color:#1F3D2B}
+.row{display:flex;gap:10px}.row>div{flex:1}
+</style></head><body>
+<div class="bar"><div class="brand">X<b>·</b>Ring</div><div class="gear">Ajustes</div></div>
+<div class="wrap">
+  <div class="cta">Novo treino</div>
+  <div class="ghost">Competição com amigos</div>
+  <div class="lab">Semanas com treino <span>4 seguidas</span></div>
+  <div class="card">
+    <div class="stave">
+      <i class="notch"></i><i class="notch"></i><i class="notch off"></i><i class="notch"></i><i class="notch"></i><i class="notch off"></i><i class="notch off"></i><i class="notch"></i><i class="notch"></i><i class="notch"></i><i class="notch"></i><i class="notch now"></i>
+    </div>
+    <div class="axis"><span>01 set</span><span>esta semana</span></div>
+  </div>
+  <div class="lab">Esta semana</div>
+  <div class="card focus">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.8px;color:#4A5246">FOCO TÉCNICO</div>
+    <h3>Ancoragem</h3>
+    <p>De frente para o rosto, do lado da corda, na altura dos olhos.</p>
+    <div class="item"><i class="box ok"></i><span class="done">Sessão técnica</span></div>
+    <div class="item"><i class="box"></i><span>Sessão de pontuação</span></div>
+    <div class="item"><i class="box ok"></i><span class="done">Treino físico (3 dias)</span></div>
+  </div>
+  <div class="row"><div class="ghost">Histórico</div><div class="ghost">Evolução</div></div>
+</div>
+</body></html>

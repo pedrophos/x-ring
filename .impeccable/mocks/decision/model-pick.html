@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=Alegreya+SC:wght@500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:#E6EBE1;font-family:Roboto,sans-serif;color:#1C2320}
+.top{padding:46px 20px 10px;display:flex;align-items:baseline;justify-content:space-between}
+.brand{font-family:Alegreya,serif;font-weight:700;font-size:32px;color:#23304A}
+.cap{display:inline-block;background:#3E5B3A;color:#C9A23F;font-family:'Alegreya SC',serif;font-size:30px;width:40px;height:40px;text-align:center;line-height:40px;border-radius:4px;margin-right:6px;border:2px solid #C9A23F}
+.set{font-size:14px;color:#3E5B3A;font-weight:500}
+.rule{height:14px;margin:0 20px;background:
+ radial-gradient(circle at 7px 7px,#C9A23F 3px,transparent 3.5px) 0 0/28px 14px repeat-x;border-top:1.5px solid #3E5B3A;border-bottom:1.5px solid #3E5B3A}
+.wrap{padding:16px 18px 0;display:flex;flex-direction:column;gap:16px}
+.cta{background:#3E5B3A;color:#F4F1E6;border-radius:10px;height:62px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px}
+.ghost{border:1.5px solid #B9C4B2;background:#F5F7F2;border-radius:10px;height:54px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#23304A}
+.lab{font-family:'Alegreya SC',serif;font-weight:700;font-size:16px;color:#3E5B3A;letter-spacing:.5px;display:flex;justify-content:space-between}
+.lab span{font-family:Roboto;font-weight:400;font-size:13px;color:#4B544D}
+.card{background:#F5F7F2;border:1px solid #C8D1C2;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.weeks{display:flex;gap:4px}.weeks i{flex:1;height:26px;border-radius:4px;border:1.5px solid #B9C4B2;background:#F5F7F2}
+.weeks i.on{background:#3E5B3A;border-color:#3E5B3A}.weeks i.now{border:1.5px dashed #23304A}
+.axis{display:flex;justify-content:space-between;font-size:12px;color:#5A635C}
+.focus h3{font-family:Alegreya,serif;font-weight:700;font-size:26px;color:#23304A}
+.focus h3 .c{color:#9B3A2E;font-size:34px}
+.focus p{font-size:13px;color:#4B544D;line-height:1.4}
+.item{display:flex;align-items:center;gap:10px;font-size:16px}
+.box{width:22px;height:22px;border:1.5px solid #B9C4B2;border-radius:5px}.box.ok{background:#3E5B3A;border-color:#3E5B3A}
+.row{display:flex;gap:10px}.row>div{flex:1}
+</style></head><body>
+<div class="top"><div class="brand"><span class="cap">X</span>-Ring</div><div class="set">Ajustes</div></div>
+<div class="rule"></div>
+<div class="wrap">
+  <div class="cta">Novo treino</div>
+  <div class="ghost">Competição com amigos</div>
+  <div class="lab">Semanas com treino <span>4 seguidas</span></div>
+  <div class="card">
+    <div class="weeks"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i></div>
+    <div class="axis"><span>01 set</span><span>esta semana</span></div>
+  </div>
+  <div class="lab">Esta semana</div>
+  <div class="card focus">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.8px;color:#4B544D">FOCO TÉCNICO</div>
+    <h3><span class="c">A</span>ncoragem</h3>
+    <p>De frente para o rosto, do lado da corda, na altura dos olhos.</p>
+    <div class="item"><i class="box ok"></i><span>Sessão técnica</span></div>
+    <div class="item"><i class="box"></i><span>Sessão de pontuação</span></div>
+    <div class="item"><i class="box ok"></i><span>Treino físico (3 dias)</span></div>
+  </div>
+  <div class="row"><div class="ghost">Histórico</div><div class="ghost">Evolução</div></div>
+</div>
+</body></html>
