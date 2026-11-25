@@ -4,7 +4,7 @@ import { Alert, View } from 'react-native';
 
 import { useDb } from '@/db/client';
 import {
-  competitionRanking,
+  standings,
   deleteSession,
   type LoadedParticipant,
   type LoadedSession,
@@ -67,6 +67,14 @@ export default function Summary() {
       )}
 
       <ParticipantSummary p={p} />
+
+      {s.participants.some((x) => x.summary.arrows > 0) && (
+        <Button
+          kind="secondary"
+          label={isComp ? 'Compartilhar resultado' : 'Compartilhar no story'}
+          onPress={() => router.push({ pathname: '/session/[id]/share', params: { id: s.id } })}
+        />
+      )}
 
       {isComp && (
         <Card>
@@ -151,13 +159,7 @@ function ParticipantSummary({ p }: { p: LoadedParticipant }) {
 
 function Ranking({ s }: { s: LoadedSession }) {
   const { colors } = useTheme();
-  // Encerrada: usa o resultado congelado; em andamento: calcula.
-  const live = competitionRanking(s);
-  const rows = s.endedAt
-    ? [...s.participants]
-        .sort((a, b) => (a.finalRank ?? 99) - (b.finalRank ?? 99))
-        .map((p) => ({ p, rank: p.finalRank ?? 0, final: p.finalScore ?? 0, total: p.summary.total, tens: p.summary.tens }))
-    : live.map((r) => ({ p: s.participants.find((x) => x.id === r.participantId)!, rank: r.rank, final: r.final, total: r.total, tens: r.tens }));
+  const rows = standings(s);
   return (
     <Card>
       {rows.map(({ p, rank, final, total, tens }) => (

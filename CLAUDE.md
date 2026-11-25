@@ -23,7 +23,7 @@ npx eas-cli@latest build -p android --profile preview   # APK para instalar dire
 - `drizzle/` — migrations geradas; nunca editar à mão.
 - `src/db/repo.ts` — todas as leituras/escritas. Toda escrita chama `invalidate()` (`src/db/store.ts`); telas leem com `useData(load, deps)` e recarregam sozinhas.
 - `src/ui/` — tema (`theme.tsx`), componentes base (`kit.tsx`), `Target` (alvo + lupa), `LineChart`, `WeekStrip`.
-- `src/app/` — telas (expo-router): início, `session/new`, `session/[id]` (tiro), `session/[id]/summary`, `history`, `evolution`, `week`, `competition/`, `settings`.
+- `src/app/` — telas (expo-router): início, `session/new`, `session/[id]` (tiro), `session/[id]/summary`, `session/[id]/share` (story 1080×1920: `ShareCard` por atirador, `PodiumCard` na competição), `history`, `evolution`, `week`, `competition/`, `settings`.
 
 ## Convenções
 

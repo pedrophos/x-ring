@@ -1,0 +1,66 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-25T20:01:02.805Z"
+  },
+  "title": "X-Ring — opções da imagem de compartilhar",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 540,
+      "h": 675,
+      "title": "A · Atual (no app hoje)"
+    },
+    "Sumula.dc.html": {
+      "x": 620,
+      "y": 0,
+      "w": 540,
+      "h": 675,
+      "title": "B · Súmula série a série"
+    },
+    "Alvo.dc.html": {
+      "x": 1240,
+      "y": 0,
+      "w": 540,
+      "h": 675,
+      "title": "C · Alvo em destaque"
+    },
+    "Story.dc.html": {
+      "x": 1860,
+      "y": 0,
+      "w": 432,
+      "h": 768,
+      "title": "D · Story 9:16"
+    },
+    "Competicao.dc.html": {
+      "x": 2372,
+      "y": 0,
+      "w": 540,
+      "h": 675,
+      "title": "E · Competição"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Sumula.dc.html",
+    "Alvo.dc.html",
+    "Story.dc.html",
+    "Competicao.dc.html"
+  ],
+  "notes": {
+    "t": {
+      "x": 0,
+      "y": -300,
+      "text": "Imagem de compartilhar — opções",
+      "kind": "title1",
+      "maxW": 2912
+    }
+  },
+  "designSystems": []
+}

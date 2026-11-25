@@ -290,6 +290,19 @@ export function competitionRanking(s: LoadedSession) {
   );
 }
 
+export type Standing = { p: LoadedParticipant; rank: number; final: number; total: number; tens: number };
+
+/** Classificação para mostrar: a congelada se a competição foi encerrada, senão a calculada agora. */
+export function standings(s: LoadedSession): Standing[] {
+  if (s.endedAt) {
+    return [...s.participants]
+      .sort((a, b) => (a.finalRank ?? 99) - (b.finalRank ?? 99))
+      .map((p) => ({ p, rank: p.finalRank ?? 0, final: p.finalScore ?? p.summary.total, total: p.summary.total, tens: p.summary.tens }));
+  }
+  const byId = new Map(s.participants.map((p) => [p.id, p]));
+  return competitionRanking(s).map((r) => ({ p: byId.get(r.participantId)!, rank: r.rank, final: r.final, total: r.total, tens: r.tens }));
+}
+
 /** Encerra a sessão; na competição congela final_rank/final_score. */
 export async function finishSession(db: Db, sessionId: string): Promise<void> {
   const s = await loadSession(db, sessionId);

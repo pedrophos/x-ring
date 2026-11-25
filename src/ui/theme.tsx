@@ -174,6 +174,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
+/** Tema fixo para um trecho (ex.: a imagem de compartilhar sai sempre igual, qualquer que seja o modo). */
+export function FixedTheme({ scheme, children }: { scheme: 'light' | 'dark'; children: ReactNode }) {
+  const parent = useTheme();
+  const value = useMemo<ThemeValue>(
+    () => ({ ...parent, colors: scheme === 'dark' ? darkColors : lightColors, scheme }),
+    [parent, scheme],
+  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
 export function useTheme(): ThemeValue {
   const t = useContext(ThemeContext);
   if (!t) throw new Error('useTheme fora do ThemeProvider');
