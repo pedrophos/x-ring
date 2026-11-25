@@ -19,9 +19,10 @@ import { ArrowSlots } from '@/ui/ArrowSlots';
 import { GroupReadingCard } from '@/ui/GroupReadingCard';
 import { Button, Card, Chip, Field, fmt, fmtDate, Row, Screen, Section, Stat, T, ToggleRow } from '@/ui/kit';
 import { type MarkedArrow, Target } from '@/ui/Target';
-import { colors, space, type } from '@/ui/theme';
+import { space, type, useTheme } from '@/ui/theme';
 
 export default function Summary() {
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useDb();
   const { data: s } = useData(() => loadSession(db, id), [db, id]);
@@ -86,6 +87,7 @@ export default function Summary() {
 }
 
 function ParticipantSummary({ p }: { p: LoadedParticipant }) {
+  const { colors } = useTheme();
   const sum = p.summary;
   const all: MarkedArrow[] = p.ends.flatMap((e, i) =>
     e.arrows
@@ -148,6 +150,7 @@ function ParticipantSummary({ p }: { p: LoadedParticipant }) {
 }
 
 function Ranking({ s }: { s: LoadedSession }) {
+  const { colors } = useTheme();
   // Encerrada: usa o resultado congelado; em andamento: calcula.
   const live = competitionRanking(s);
   const rows = s.endedAt

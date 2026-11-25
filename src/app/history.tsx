@@ -6,9 +6,10 @@ import { loadSessions } from '@/db/repo';
 import { useData } from '@/db/store';
 import { dateKey } from '@/domain/weeks';
 import { Card, Empty, fmt, fmtDate, ListItem, Screen, Section, T } from '@/ui/kit';
-import { colors, type } from '@/ui/theme';
+import { type, useTheme } from '@/ui/theme';
 
 export default function History() {
+  const { colors } = useTheme();
   const db = useDb();
   const { data } = useData(() => loadSessions(db), [db]);
   if (!data) return null;

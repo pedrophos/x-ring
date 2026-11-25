@@ -3,10 +3,11 @@ import { StyleSheet, View } from 'react-native';
 import { parseDateKey } from '@/domain/weeks';
 
 import { T } from './kit';
-import { colors, radius } from './theme';
+import { radius, useTheme } from './theme';
 
 /** Faixa das últimas semanas: cheia = houve treino. A última é a semana atual. */
 export function WeekStrip({ weeks, trained }: { weeks: string[]; trained: ReadonlySet<string> }) {
+  const { colors } = useTheme();
   return (
     <View style={{ gap: 6 }}>
       <View style={styles.row}>
@@ -19,6 +20,7 @@ export function WeekStrip({ weeks, trained }: { weeks: string[]; trained: Readon
               accessibilityLabel={`Semana de ${w}: ${on ? 'com treino' : 'sem treino'}`}
               style={[
                 styles.cell,
+                { borderColor: colors.line, backgroundColor: colors.surface },
                 on ? { backgroundColor: colors.accent, borderColor: colors.accent } : null,
                 current && !on ? { borderColor: colors.ink, borderStyle: 'dashed' } : null,
               ]}
@@ -48,7 +50,5 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: radius.sm,
     borderWidth: 1.5,
-    borderColor: colors.line,
-    backgroundColor: colors.surface,
   },
 });

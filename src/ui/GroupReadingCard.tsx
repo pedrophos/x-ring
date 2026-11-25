@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { type GroupReading, MIN_ARROWS_FOR_READING, readGroup, type Point } from '@/domain/group-analysis';
 
 import { Card, fmt, T } from './kit';
-import { colors, space } from './theme';
+import { space, useTheme } from './theme';
 
 const H = { left: 'esquerda', right: 'direita' } as const;
 const V = { up: 'cima', down: 'baixo' } as const;
@@ -21,6 +21,7 @@ const PATTERN = {
 } as const;
 
 export function GroupReadingCard({ title, points, ringWidthMm }: { title: string; points: Point[]; ringWidthMm: number }) {
+  const { colors } = useTheme();
   const r = readGroup(points, ringWidthMm);
   if (!r) {
     return (

@@ -8,8 +8,8 @@ import { useDb } from '@/db/client';
 import { type Archer, exportAll, getMe, updateMe } from '@/db/repo';
 import { useData } from '@/db/store';
 import { dateKey } from '@/domain/weeks';
-import { Button, Card, Field, Screen, Section, T } from '@/ui/kit';
-import { colors } from '@/ui/theme';
+import { Button, Card, ChipRow, Field, Screen, Section, T } from '@/ui/kit';
+import { type ThemePreference, useTheme } from '@/ui/theme';
 
 export default function Settings() {
   const db = useDb();
@@ -19,6 +19,7 @@ export default function Settings() {
 }
 
 function SettingsForm({ me }: { me: Archer }) {
+  const { colors, preference, setPreference } = useTheme();
   const db = useDb();
   const [name, setName] = useState(me.name);
   const [diameter, setDiameter] = useState(String(me.arrowDiameterMm).replace('.', ','));
@@ -73,6 +74,21 @@ function SettingsForm({ me }: { me: Archer }) {
         <T variant="small" color={colors.inkSoft}>
           Usado na regra da linha: a flecha que toca a linha vale o anel maior. Vale para as próximas sessões; as
           antigas mantêm o valor da época.
+        </T>
+      </Section>
+
+      <Section title="Aparência">
+        <ChipRow<ThemePreference>
+          options={[
+            { value: 'system', label: 'Sistema' },
+            { value: 'light', label: 'Claro' },
+            { value: 'dark', label: 'Escuro' },
+          ]}
+          value={preference}
+          onChange={setPreference}
+        />
+        <T variant="small" color={colors.inkSoft}>
+          No sol, o claro lê melhor. O alvo mantém as cores oficiais em qualquer modo.
         </T>
       </Section>
 

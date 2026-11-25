@@ -7,7 +7,7 @@ import { type Archer, createArcher, createCompetition, type CompetitorSetup, lis
 import { useData } from '@/db/store';
 import type { HandicapType } from '@/domain/ranking';
 import { Button, Card, Chip, ChipRow, Field, Row, Screen, Section, T, ToggleRow } from '@/ui/kit';
-import { colors, space } from '@/ui/theme';
+import { space, useTheme } from '@/ui/theme';
 
 const HANDICAP: { value: HandicapType; label: string; hint: string }[] = [
   { value: 'none', label: 'Sem handicap', hint: 'Todos na mesma distância e alvo.' },
@@ -25,6 +25,7 @@ export default function NewCompetition() {
 }
 
 function CompetitionForm({ data }: { data: { archers: Archer[]; faces: TargetFace[] } }) {
+  const { colors } = useTheme();
   const db = useDb();
   const defaultFace = data.faces[0]?.id ?? '';
   const me = data.archers.find((a) => a.isMe);

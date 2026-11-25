@@ -5,7 +5,10 @@ import Svg, { Circle, G, Line } from 'react-native-svg';
 import { type ArrowPoint, arrowToDrawing, drawingToArrow, faceViewBox, pxToDrawing, type ViewBox } from '@/domain/geometry';
 import type { TargetFaceDef } from '@/domain/target-face';
 
-import { colors } from './theme';
+import { lightColors, useTheme } from './theme';
+
+/** Marcadores ficam sobre o alvo (cores fixas da World Archery), então não mudam com o modo. */
+const marker = { arrow: lightColors.arrow, last: lightColors.arrowLast, old: lightColors.arrowOld };
 
 export type MarkedArrow = ArrowPoint & { tone?: 'current' | 'last' | 'old' };
 
@@ -62,7 +65,7 @@ function Arrows({ face, arrows, rMm }: { face: TargetFaceDef; arrows: MarkedArro
     <>
       {arrows.map((a, i) => {
         const p = arrowToDrawing(face, a);
-        const fill = a.tone === 'last' ? colors.arrowLast : a.tone === 'old' ? colors.arrowOld : colors.arrow;
+        const fill = a.tone === 'last' ? marker.last : a.tone === 'old' ? marker.old : marker.arrow;
         return (
           <Circle
             key={i}
@@ -182,11 +185,12 @@ function Loupe({
   // Acima do dedo; se não couber, abaixo.
   const above = touch.py - LOUPE_SIZE - LOUPE_GAP;
   const top = above >= -LOUPE_SIZE / 3 ? above : touch.py + LOUPE_GAP;
+  const { colors } = useTheme();
   const cross = spanMm / 8;
   const sw = spanMm / 90;
 
   return (
-    <View pointerEvents="none" style={[styles.loupe, { left, top }]}>
+    <View pointerEvents="none" style={[styles.loupe, { left, top, borderColor: colors.ink }]}>
       <Svg
         width={LOUPE_SIZE}
         height={LOUPE_SIZE}
@@ -194,9 +198,9 @@ function Loupe({
       >
         <Rings face={face} />
         <Arrows face={face} arrows={arrows} rMm={markerR} />
-        <Circle cx={point.x} cy={point.y} r={markerR} fill="none" stroke={colors.arrowLast} strokeWidth={sw * 1.5} />
-        <Line x1={point.x - cross} y1={point.y} x2={point.x + cross} y2={point.y} stroke={colors.arrowLast} strokeWidth={sw} />
-        <Line x1={point.x} y1={point.y - cross} x2={point.x} y2={point.y + cross} stroke={colors.arrowLast} strokeWidth={sw} />
+        <Circle cx={point.x} cy={point.y} r={markerR} fill="none" stroke={marker.last} strokeWidth={sw * 1.5} />
+        <Line x1={point.x - cross} y1={point.y} x2={point.x + cross} y2={point.y} stroke={marker.last} strokeWidth={sw} />
+        <Line x1={point.x} y1={point.y - cross} x2={point.x} y2={point.y + cross} stroke={marker.last} strokeWidth={sw} />
       </Svg>
     </View>
   );
@@ -222,8 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: LOUPE_SIZE / 2,
     overflow: 'hidden',
     borderWidth: 3,
-    borderColor: colors.ink,
-    backgroundColor: colors.surface,
+    backgroundColor: '#FFFFFF',
     elevation: 8,
   },
 });

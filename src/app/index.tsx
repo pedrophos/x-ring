@@ -7,10 +7,11 @@ import { useData } from '@/db/store';
 import { nextElement, TECHNIQUE_GUIDE } from '@/domain/technique';
 import { currentStreak } from '@/domain/weeks';
 import { Button, Card, Row, Screen, Section, T } from '@/ui/kit';
-import { colors, radius, space } from '@/ui/theme';
+import { radius, space, useTheme } from '@/ui/theme';
 import { WeekStrip } from '@/ui/WeekStrip';
 
 export default function Home() {
+  const { colors } = useTheme();
   const db = useDb();
   const { data } = useData(() => loadOverview(db), [db]);
   if (!data) return null;

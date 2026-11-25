@@ -9,11 +9,12 @@ import { useData } from '@/db/store';
 import { nextElement, TECHNIQUE_ELEMENTS, TECHNIQUE_GUIDE, type TechniqueElement } from '@/domain/technique';
 import { addDays, dateKey, parseDateKey } from '@/domain/weeks';
 import { Card, Chip, ChipRow, Field, Row, Screen, Section, T, ToggleRow } from '@/ui/kit';
-import { colors, space } from '@/ui/theme';
+import { space, useTheme } from '@/ui/theme';
 
 const DAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 
 export default function Week() {
+  const { colors } = useTheme();
   const db = useDb();
   const { data } = useData(() => loadOverview(db), [db]);
   if (!data) return null;

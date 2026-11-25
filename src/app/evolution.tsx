@@ -9,10 +9,11 @@ import { useData } from '@/db/store';
 import { lastWeekKeys } from '@/domain/weeks';
 import { Card, ChipRow, Empty, fmt, fmtDate, ListItem, Screen, Section, T } from '@/ui/kit';
 import { LineChart } from '@/ui/LineChart';
-import { colors, type } from '@/ui/theme';
+import { type, useTheme } from '@/ui/theme';
 import { WeekStrip } from '@/ui/WeekStrip';
 
 export default function Evolution() {
+  const { colors } = useTheme();
   const db = useDb();
   const { data } = useData(async () => {
     const [me, sessions] = await Promise.all([getMe(db), loadSessions(db)]);

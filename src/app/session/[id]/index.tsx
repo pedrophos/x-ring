@@ -22,7 +22,7 @@ import { ArrowSlots } from '@/ui/ArrowSlots';
 import { GroupReadingCard } from '@/ui/GroupReadingCard';
 import { Button, Card, Chip, fmt, Row, T } from '@/ui/kit';
 import { type MarkedArrow, Target } from '@/ui/Target';
-import { colors, space, type } from '@/ui/theme';
+import { space, type, useTheme } from '@/ui/theme';
 
 /** Próximo a atirar: quem tem menos séries; empate pela ordem de vez. */
 function nextShooter(s: LoadedSession): LoadedParticipant {
@@ -30,6 +30,7 @@ function nextShooter(s: LoadedSession): LoadedParticipant {
 }
 
 export default function Shoot() {
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useDb();
   const { data: s } = useData(() => loadSession(db, id), [db, id]);
@@ -231,6 +232,7 @@ export default function Shoot() {
 }
 
 function Scoreboard({ s }: { s: LoadedSession }) {
+  const { colors } = useTheme();
   const ranking = competitionRanking(s);
   const byId = new Map(s.participants.map((p) => [p.id, p]));
   const showHandicap = s.handicapType === 'points';

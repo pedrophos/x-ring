@@ -6,9 +6,10 @@ import { getMe, loadSessions } from '@/db/repo';
 import { useData } from '@/db/store';
 import { type CompetitionResult, headToHead } from '@/domain/ranking';
 import { Button, Card, Empty, fmtDate, ListItem, Row, Screen, Section, T } from '@/ui/kit';
-import { colors, type } from '@/ui/theme';
+import { type, useTheme } from '@/ui/theme';
 
 export default function Competitions() {
+  const { colors } = useTheme();
   const db = useDb();
   const { data } = useData(async () => {
     const [me, sessions] = await Promise.all([getMe(db), loadSessions(db)]);

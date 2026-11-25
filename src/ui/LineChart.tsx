@@ -3,12 +3,7 @@ import { type GestureResponderEvent, Pressable, View } from 'react-native';
 import Svg, { Circle, Line, Polyline, Text as SvgText } from 'react-native-svg';
 
 import { T } from './kit';
-import { colors } from './theme';
-
-/** Série 1 da paleta de referência (validada: luminosidade, croma, contraste). */
-const SERIES = '#2a78d6';
-const GRID = '#E4DFD4';
-const SURFACE = colors.surface;
+import { useTheme } from './theme';
 
 export type ChartPoint = { date: Date; value: number };
 
@@ -39,6 +34,10 @@ const shortDate = (d: Date) => d.toLocaleDateString('pt-BR', { day: '2-digit', m
 
 /** Linha única com marcadores; toque para ver o valor de um ponto. */
 export function LineChart({ points, format, height = 180 }: Props) {
+  const { colors } = useTheme();
+  const SERIES = colors.series;
+  const GRID = colors.grid;
+  const SURFACE = colors.surface;
   const [width, setWidth] = useState(0);
   const [sel, setSel] = useState<number | null>(null);
 
