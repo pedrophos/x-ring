@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useDb } from '@/db/client';
-import { type Archer, createArcher, createCompetition, type CompetitorSetup, listArchers, listFaces, type TargetFace } from '@/db/repo';
+import { type Archer, createArcher, createCompetition, type CompetitorSetup, lastDistance, listArchers, listFaces, type TargetFace } from '@/db/repo';
 import { useData } from '@/db/store';
 import type { HandicapType } from '@/domain/ranking';
+import { DistancePicker } from '@/ui/DistancePicker';
 import { Button, Card, Chip, ChipRow, Field, Row, Screen, Section, T, ToggleRow } from '@/ui/kit';
 import { space, useTheme } from '@/ui/theme';
 
@@ -15,16 +16,18 @@ const HANDICAP: { value: HandicapType; label: string; hint: string }[] = [
   { value: 'target', label: 'Alvo maior', hint: 'Iniciante usa um alvo maior.' },
   { value: 'points', label: 'Pontos', hint: 'Pontos extras por série para quem está começando.' },
 ];
-const DISTANCES = [5, 10, 15, 18, 25, 30];
 
 export default function NewCompetition() {
   const db = useDb();
-  const { data } = useData(async () => ({ archers: await listArchers(db), faces: await listFaces(db) }), [db]);
+  const { data } = useData(
+    async () => ({ archers: await listArchers(db), faces: await listFaces(db), distance: (await lastDistance(db)) ?? 18 }),
+    [db],
+  );
   if (!data) return null;
   return <CompetitionForm data={data} />;
 }
 
-function CompetitionForm({ data }: { data: { archers: Archer[]; faces: TargetFace[] } }) {
+function CompetitionForm({ data }: { data: { archers: Archer[]; faces: TargetFace[]; distance: number } }) {
   const { colors } = useTheme();
   const db = useDb();
   const defaultFace = data.faces[0]?.id ?? '';
@@ -36,10 +39,10 @@ function CompetitionForm({ data }: { data: { archers: Archer[]; faces: TargetFac
   const [countForStats, setCountForStats] = useState(false);
   // O atirador principal entra de início.
   const [competitors, setCompetitors] = useState<CompetitorSetup[]>(
-    me ? [{ archerId: me.id, distanceM: 18, targetFaceId: defaultFace, handicapPoints: 0 }] : [],
+    me ? [{ archerId: me.id, distanceM: data.distance, targetFaceId: defaultFace, handicapPoints: 0 }] : [],
   );
   const [newName, setNewName] = useState('');
-  const [baseDistance, setBaseDistance] = useState(18);
+  const [baseDistance, setBaseDistance] = useState(data.distance);
   const [saving, setSaving] = useState(false);
 
   const byId = new Map(data.archers.map((a) => [a.id, a]));
@@ -142,7 +145,7 @@ function CompetitionForm({ data }: { data: { archers: Archer[]; faces: TargetFac
         <T variant="small" color={colors.inkSoft}>
           Distância {handicap === 'distance' ? 'base' : ''}
         </T>
-        <ChipRow options={DISTANCES.map((d) => ({ value: d, label: `${d} m` }))} value={baseDistance} onChange={setAllDistance} />
+        <DistancePicker value={baseDistance} onChange={setAllDistance} />
         {handicap !== 'target' && (
           <>
             <T variant="small" color={colors.inkSoft}>
@@ -170,7 +173,7 @@ function CompetitionForm({ data }: { data: { archers: Archer[]; faces: TargetFac
             <Card key={c.archerId}>
               <T variant="heading">{byId.get(c.archerId)?.name}</T>
               {handicap === 'distance' && (
-                <ChipRow options={DISTANCES.map((d) => ({ value: d, label: `${d} m` }))} value={c.distanceM} onChange={(d) => patch(c.archerId, { distanceM: d })} />
+                <DistancePicker value={c.distanceM} onChange={(d) => patch(c.archerId, { distanceM: d })} />
               )}
               {handicap === 'target' && (
                 <ChipRow

@@ -76,6 +76,19 @@ export function scoreEnd(
 }
 
 /** Carrega sessões completas (participantes → séries → flechas), pontuadas. */
+/** Distância da última sessão do atirador principal (treino ou competição): o espaço de tiro de costume. */
+export async function lastDistance(db: Db): Promise<number | null> {
+  const me = await getMe(db);
+  const [row] = await db
+    .select({ d: participants.distanceM })
+    .from(participants)
+    .innerJoin(sessions, eq(sessions.id, participants.sessionId))
+    .where(and(eq(participants.archerId, me.id), isNull(participants.deletedAt), isNull(sessions.deletedAt)))
+    .orderBy(desc(participants.createdAt))
+    .limit(1);
+  return row?.d ?? null;
+}
+
 export async function loadSessions(db: Db, sessionIds?: string[]): Promise<LoadedSession[]> {
   const sessionRows = await db
     .select()

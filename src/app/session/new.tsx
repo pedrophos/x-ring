@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useDb } from '@/db/client';
 import { createTraining, listFaces, loadSessions, type Session, type TargetFace } from '@/db/repo';
 import { useData } from '@/db/store';
-import { Button, ChipRow, Field, Screen, Section } from '@/ui/kit';
+import { DistancePicker } from '@/ui/DistancePicker';
+import { Button, ChipRow, Screen, Section } from '@/ui/kit';
 
-const DISTANCES = [10, 18, 25, 30, 50, 70];
 const ENDS = [
   { value: 0, label: 'Livre' },
   { value: 5, label: '5' },
@@ -33,14 +33,12 @@ export default function NewTraining() {
 /** Começa com a configuração do último treino. */
 function TrainingForm({ faces, last, lastSession }: { faces: TargetFace[]; last?: { distanceM: number; targetFaceId: string }; lastSession?: Session }) {
   const db = useDb();
-  const [distance, setDistance] = useState(last?.distanceM ?? 18);
-  const [customDistance, setCustomDistance] = useState('');
+  const [distanceM, setDistanceM] = useState(last?.distanceM ?? 18);
   const [faceId, setFaceId] = useState<string | null>(last?.targetFaceId ?? faces[0]?.id ?? null);
   const [arrowsPerEnd, setArrowsPerEnd] = useState(lastSession?.arrowsPerEnd ?? 6);
   const [endsPlanned, setEndsPlanned] = useState(lastSession?.endsPlanned ?? 0);
   const [saving, setSaving] = useState(false);
 
-  const distanceM = customDistance ? Number(customDistance.replace(',', '.')) : distance;
   const valid = faceId && distanceM > 0;
 
   async function start() {
@@ -58,22 +56,8 @@ function TrainingForm({ faces, last, lastSession }: { faces: TargetFace[]; last?
   return (
     <Screen>
       <Stack.Screen options={{ title: 'Novo treino' }} />
-      <Section title="Distância (m)">
-        <ChipRow
-          options={DISTANCES.map((d) => ({ value: d, label: `${d} m` }))}
-          value={customDistance ? -1 : distance}
-          onChange={(d) => {
-            setDistance(d);
-            setCustomDistance('');
-          }}
-        />
-        <Field
-          label="Outra distância"
-          keyboardType="decimal-pad"
-          placeholder="ex.: 12"
-          value={customDistance}
-          onChangeText={setCustomDistance}
-        />
+      <Section title="Distância">
+        <DistancePicker value={distanceM} onChange={setDistanceM} />
       </Section>
 
       <Section title="Alvo">
